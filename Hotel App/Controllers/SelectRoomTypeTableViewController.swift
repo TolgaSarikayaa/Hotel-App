@@ -7,83 +7,107 @@
 
 import UIKit
 
+protocol SelectRoomTypeTableViewControllerDelegate: class {
+    
+    func didSelect(roomType: RoomType)
+}
+
 class SelectRoomTypeTableViewController: UITableViewController {
 
+    // MARK: - UI Elements
+    
+    
+    
+    // MARK: - Properties
+    var selectedRoomType: RoomType?
+    weak var delegate: SelectRoomTypeTableViewControllerDelegate?
+    
+    var roomName = [String]()
+    var roomImage = [UIImage]()
+    
+    var choosenRoomTypeName = ""
+    var choosenRoomImage = UIImage()
+    
+    
+    
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.backgroundView = UIImageView(image: UIImage(named: "roomBackground.jpeg"))
+        
+        roomName.append("Two Queen")
+        roomName.append("One King")
+        roomName.append("Suit")
+        
+        roomImage.append(UIImage(named: "Queen.jpg")!)
+        roomImage.append(UIImage(named: "One King.jpg")!)
+        roomImage.append(UIImage(named: "suit.jpg")!)
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        
     }
 
-    // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
+    // MARK: - Functions
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        // Here we specify how many cells should be in the list element.
+        return RoomType.all.count
     }
-
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = UITableViewCell()
+        
+        // We set which value we should use according to which cell is in the list element with the value defined here.
+        let roomType = RoomType.all[indexPath.row]
+        
+        cell.textLabel?.text = roomType.name
+        cell.detailTextLabel?.text = "$ \(roomType.price)"
+        
+        /*
+        // Is the currently drawn room type the previously selected room type?
+        if roomType == selectedRoomType {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
+         */
+        
         return cell
+         
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+       
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // Here it is interacting with the values ​​inside the other ViewController element.
+        tableView.deselectRow(at: indexPath, animated: true)
+        selectedRoomType = RoomType.all[indexPath.row]
+        delegate?.didSelect(roomType: selectedRoomType!)
+        
+        choosenRoomTypeName = roomName[indexPath.row]
+        choosenRoomImage = roomImage[indexPath.row]
+        performSegue(withIdentifier: "toRoomImage", sender: nil)
+        
+       
+        
+        tableView.reloadData()
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "toRoomImage" {
+            let destinatonVC = segue.destination as! RoomImageViewController
+            destinatonVC.selectedRoomImage = choosenRoomImage
+            destinatonVC.selectedRoomTypeNameLabel = choosenRoomTypeName
+        }
     }
-    */
+    
+   
+    
 
+ 
+    
+    
+    // MARK: - Actions
+    
 }

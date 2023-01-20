@@ -7,18 +7,19 @@
 
 import UIKit
 
-class RoomImageViewController: UITableViewController {
+class RoomImageViewController: UIViewController {
 
     
     // MARK: - UI Elements
     
     @IBOutlet weak var imageView : UIImageView!
     
+    @IBOutlet weak var roomTypeName: UILabel!
     
     // MARK: - Properties
 
     var selectedRoomImage = UIImage()
-    
+    var selectedRoomTypeNameLabel = ""
     
     
     
@@ -26,9 +27,9 @@ class RoomImageViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background.png")!)
    
-        
+        roomTypeName.text = selectedRoomTypeNameLabel
         imageView.image = selectedRoomImage
         
         
